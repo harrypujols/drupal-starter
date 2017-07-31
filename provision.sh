@@ -3,15 +3,14 @@
 # Use single quotes instead of double quotes to make it work with special-character passwords
 PASSWORD='root'
 PROJECT=$1
-IP=$2
+PORT=$2
 
 # update / upgrade
 sudo apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
 
+# symlink site's folder
 sudo ln -s /var/www/html /home/vagrant/public
-# install apache
-sudo apt-get install -y apache2
 
 # install php latest
 sudo apt-get install -y php libapache2
@@ -55,6 +54,22 @@ sudo chmod +x /usr/local/bin/drupal
 # create a database
 mysql --user=$PASSWORD --password=$PASSWORD -e "create database ${PROJECT};"
 
+# # install drupal if not present
+if [ ! "$( ls -A /var/www/html )" ]; then
+  drush dl drupal --drupal-project-rename=html
+  sudo rm /var/www/html
+  sudo mv html /var/www/html
+fi
+
+# install apache
+sudo apt-get install -y apache2
+
+# enable mods
+sudo a2enmod rewrite
+sudo a2enmod headers
+sudo a2enmod expires
+sudo a2enmod include
+
 # setup hosts file
 VHOST=$(cat <<EOF
 <VirtualHost *:80>
@@ -73,12 +88,6 @@ EOF
 echo "${VHOST}" > /etc/apache2/sites-available/$PROJECT.local.conf
 sudo a2ensite $PROJECT.local.conf
 
-# enable mods
-sudo a2enmod rewrite
-sudo a2enmod headers
-sudo a2enmod expires
-sudo a2enmod include
-
 # change apache configurations
 sudo sed -i "/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride all/" /etc/apache2/apache2.conf
 
@@ -88,13 +97,7 @@ sudo service apache2 restart
 # install git
 sudo apt-get -y install git
 
-# # install drupal if not present
-if [ ! "$( ls -A /var/www/html )" ]; then
-  drush dl drupal --drupal-project-rename=html
-  sudo mv html /var/www/html
-fi
-
 # all done
-printf "\033[0;36mdatabase \"$PROJECT\" created\033[0"
-printf "\033[0;36musername is \"$PASSWORD\" password is \"$PASSWORD\"\033[0"
-printf "\033[0;36m${PROJECT} site running on \033[0;35mhttp://${IP}\033[0m"
+echo "database \"$PROJECT\" created"
+echo "username is \"$PASSWORD\" password is \"$PASSWORD\""
+printf "\033[0;36m${PROJECT} site running on \033[0;35mhttp://localhost:${PORT}\033[0m"
