@@ -95,5 +95,6 @@ if [ ! "$( ls -A /var/www/html )" ]; then
 fi
 
 # all done
-printf "\033[0;36mdatabase ${PROJECT} created, username is \"$PASSWORD\" password is \"$PASSWORD\"\033[0"
+printf "\033[0;36mdatabase \"$PROJECT\" created\033[0"
+printf "\033[0;36musername is \"$PASSWORD\" password is \"$PASSWORD\"\033[0"
 printf "\033[0;36m${PROJECT} site running on \033[0;35mhttp://${IP}\033[0m"
