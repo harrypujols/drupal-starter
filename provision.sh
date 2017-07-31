@@ -55,10 +55,8 @@ sudo chmod +x /usr/local/bin/drupal
 mysql --user=$PASSWORD --password=$PASSWORD -e "create database ${PROJECT};"
 
 # # install drupal if not present
-if [ ! "$( ls -A /var/www/html )" ]; then
-  drush dl drupal --drupal-project-rename=html
-  sudo rm /var/www/html
-  sudo mv html /var/www/html
+if [ ! "$( ls -A /var/www/${PROJECT} )" ]; then
+  drush dl drupal-8 --destination=/var/www/ --drupal-project-rename=$PROJECT
 fi
 
 # install apache
@@ -73,11 +71,8 @@ sudo a2enmod include
 # setup hosts file
 VHOST=$(cat <<EOF
 <VirtualHost *:80>
-    ServerAdmin webmaster@localhost
-    ServerName $PROJECT.local
-	  ServerAlias www.$PROJECT.local
-    DocumentRoot /var/www/html
-    <Directory "/var/www/html">
+    DocumentRoot "/var/www/$PROJECT"
+    <Directory "/var/www/$PROJECT">
         AllowOverride All
         Require all granted
     </Directory>
@@ -85,8 +80,13 @@ VHOST=$(cat <<EOF
 EOF
 )
 
-echo "${VHOST}" > /etc/apache2/sites-available/$PROJECT.local.conf
-sudo a2ensite $PROJECT.local.conf
+echo "${VHOST}" > /etc/apache2/sites-available/$PROJECT.conf
+cp /etc/apache2/sites-available/$PROJECT.conf /etc/apache2/sites-available/default.conf
+sed -i "s/html/$PROJECT/g" /etc/apache2/sites-available/000-default.conf
+sed -i "s/\\/$PROJECT//g" /etc/apache2/sites-available/default.conf
+
+# clean up
+sudo rm -rf /var/www/html
 
 # change apache configurations
 sudo sed -i "/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride all/" /etc/apache2/apache2.conf
