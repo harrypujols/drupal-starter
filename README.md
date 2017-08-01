@@ -7,7 +7,7 @@ This repository needs two dependencies to install:
 - [Vagrant](https://www.vagrantup.com/downloads.html)
 - [Virtual Box](https://www.virtualbox.org/wiki/Downloads)
 
-Once install, use the command line to reach the root of this repository. From there run:
+Once installed, use the command line to reach the root of this repository. From there run:
 
 ```bash
 vagrant up
