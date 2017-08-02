@@ -10,7 +10,7 @@ sudo apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
 
 # symlink site's folder
-sudo ln -s /var/www/html /home/vagrant/public
+sudo ln -s /var/www/html /home/vagrant/$PROJECT
 
 # install php latest
 sudo apt-get install -y php libapache2
