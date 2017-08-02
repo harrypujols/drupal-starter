@@ -41,7 +41,7 @@ password=root
 host=localhost
 EOF
 )
-echo "${MY}" > /home/vagrant/.my.cnf
+echo "$MY" > /home/vagrant/.my.cnf
 
 # install drush
 sudo apt-get install -y drush
@@ -52,10 +52,10 @@ sudo mv drupal.phar /usr/local/bin/drupal
 sudo chmod +x /usr/local/bin/drupal
 
 # create a database
-mysql --user=$PASSWORD --password=$PASSWORD -e "create database ${PROJECT};"
+mysql --user=$PASSWORD --password=$PASSWORD -e "create database $PROJECT;"
 
 # # install drupal if not present
-if [ ! "$( ls -A /var/www/${PROJECT} )" ]; then
+if [ ! "$( ls -A /var/www/$PROJECT )" ]; then
   drush dl drupal-8 --destination=/var/www/ --drupal-project-rename=$PROJECT
 fi
 
@@ -80,7 +80,7 @@ VHOST=$(cat <<EOF
 EOF
 )
 
-echo "${VHOST}" > /etc/apache2/sites-available/$PROJECT.conf
+echo "$VHOST" > /etc/apache2/sites-available/$PROJECT.conf
 cp /etc/apache2/sites-available/$PROJECT.conf /etc/apache2/sites-available/default.conf
 sed -i "s/html/$PROJECT/g" /etc/apache2/sites-available/000-default.conf
 sed -i "s/\\/$PROJECT//g" /etc/apache2/sites-available/default.conf
@@ -100,4 +100,4 @@ sudo apt-get -y install git
 # all done
 echo "database \"$PROJECT\" created"
 echo "username is \"$PASSWORD\" password is \"$PASSWORD\""
-printf "\033[0;36m${PROJECT} site running on \033[0;35mhttp://localhost:${PORT}\033[0m"
+printf "\033[0;36m$PROJECT site running on \033[0;35mhttp://localhost:$PORT\033[0m"
