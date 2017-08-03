@@ -37,6 +37,11 @@ fi
 # symlink site's folder
 ln -s /var/www/html /home/vagrant/$PROJECT
 
+# install node
+apt-get install npm
+npm install -g n
+n stable
+
 # restart apache
 service apache2 restart
 
