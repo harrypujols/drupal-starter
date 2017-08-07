@@ -39,3 +39,16 @@ vagrant ssh
 ```
 
 To install Drupal 7, any other version of Drupal, or an instance of Drupal you have modified, just replace the "public" folder.
+
+### Trusted host patterns
+
+Add something like this code to your "settings.php" file to clear the warning:
+
+```php
+$settings['trusted_host_patterns'] = array(
+  '^127\.0\.0\.1$',
+  '^.+\127\.0\.0\.1$',
+  '^localhost$',
+  '^.+\localhost$'
+);
+```

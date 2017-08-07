@@ -14,6 +14,7 @@ apt-get upgrade
 
 # add php packages
 apt-get install -y php-uploadprogress
+phpenmod uploadprogress
 
 # install drush
 apt-get install -y drush
@@ -38,7 +39,7 @@ fi
 ln -s /var/www/html /home/vagrant/$PROJECT
 
 # install node
-apt-get install npm
+apt-get install -y npm
 npm install -g n
 n stable
 
