@@ -10,7 +10,7 @@ add-apt-repository ppa:ondrej/php
 
 # update / upgrade
 apt-get update
-apt-get upgrade
+apt-get upgrade -y
 
 # add php packages
 apt-get install -y php-uploadprogress
